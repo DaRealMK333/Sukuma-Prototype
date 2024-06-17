@@ -636,7 +636,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 684942945}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 719089046}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &684942945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -791,6 +803,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Pi: 0
   Bi: 0
+  bluexCordList: 
+  blueyCordList: 
+  purplexCordList: 
+  purpleyCordList: 
+  topLeftObjects: []
+  topRightObjects: []
+  bottomLeftObjects: []
+  bottomRightObjects: []
 --- !u!1 &951784457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,9 +1107,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardColliders: {fileID: 6534002253897305222, guid: 9900411613aef18429c14e993a0ef100, type: 3}
-  BlueBead: {fileID: 2908449363776007015, guid: a8c0facaa5874314c885d5ed33b44461, type: 3}
-  PurpleBead: {fileID: 6989570932064997476, guid: d9e4500278d091e4180010c5ef45974c, type: 3}
-  ArrBlueBead:
+  blueBead: {fileID: 2908449363776007015, guid: a8c0facaa5874314c885d5ed33b44461, type: 3}
+  purpleBead: {fileID: 6989570932064997476, guid: d9e4500278d091e4180010c5ef45974c, type: 3}
+  arrBlueBead:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1116,7 +1136,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  ArrPurpleBead:
+  arrPurpleBead:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1143,8 +1163,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  CircleHighlight: {fileID: 8876109796232441061, guid: 6801c76cd1e244d4ea5a68fb3780d6eb, type: 3}
-  ArrBlueBeadName:
+  circleHighlight: {fileID: 8876109796232441061, guid: 6801c76cd1e244d4ea5a68fb3780d6eb, type: 3}
+  arrBlueBeadName:
   - 
   - 
   - 
@@ -1171,7 +1191,7 @@ MonoBehaviour:
   - 
   - 
   - 
-  ArrPurpleBeadName:
+  arrPurpleBeadName:
   - 
   - 
   - 
@@ -1198,8 +1218,10 @@ MonoBehaviour:
   - 
   - 
   - 
-  Destroyer: {fileID: 0}
-  _TrackerScript: {fileID: 0}
+  destroyer: {fileID: 0}
+  trackerScript: {fileID: 0}
+  instance: {fileID: 0}
+  threeRow: 0
 --- !u!1 &1801875901
 GameObject:
   m_ObjectHideFlags: 0

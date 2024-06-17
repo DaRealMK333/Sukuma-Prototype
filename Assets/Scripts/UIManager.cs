@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class UIManager : MonoBehaviour
@@ -41,9 +42,9 @@ public class UIManager : MonoBehaviour
 
             canvaGame.SetActive(true);
             canvaRestart.SetActive(false);
-
-            trackerScript.ResetScores();
-        }
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
+    }
         
       
     }

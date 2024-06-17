@@ -1,44 +1,69 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class TrackerScript : MonoBehaviour
 {
+    [FormerlySerializedAs("BlueScoretxt")] public Text blueScoretxt;
+    [FormerlySerializedAs("PurpleScoretxt")] public Text purpleScoretxt;
+    private int _blueScore, _purpleScore;
+    [FormerlySerializedAs("MinScore")] public int minScore = 0;
+    public UIManager uiManager;
+    [FormerlySerializedAs("Up")] public bool up;
+    [FormerlySerializedAs("Down")] public bool down;
+    [FormerlySerializedAs("Left")] public bool left;
+    [FormerlySerializedAs("Right")] public bool right;
+
     private void Start()
     {
         BlueScore = PurpleScore = 26;
+        up = down = left = right = false;
+    }
+    
+    private void Update()
+    {
+        if (up)
+        {
+            down = left = right = false;
+        }
+        else if(down)
+        {
+            up = right = left = false;
+        }
+        else if (right)
+        {
+            up = down = left = false;
+        }
+        else if (left)
+        {
+            up = down = right = false;
+        }
     }
 
     public enum Score
     {
         BlueScore, PurpleScore
     }
-
-    public Text BlueScoretxt, PurpleScoretxt;
-    private int blueScore, purpleScore;
-    public int MinScore = 0;
-    public UIManager uiManager;
-    public Vector3 LastDirection;
+    
+    
     public int BlueScore
     {
-        get { return blueScore; }
-        set
+        get => _blueScore;
+        private set
         {
-            blueScore = value;
-            if (value == MinScore)          
-                uiManager.showRestart(false);         
+            _blueScore = value;
+            if (value == minScore)          
+                uiManager.ShowRestart(false);         
         }
     }
     public int PurpleScore
     {
-        get { return purpleScore; }
-        set
+        get => _purpleScore;
+        private set
         {
-            purpleScore = value;
-            if (value == MinScore)
-                uiManager.showRestart(true);
+            _purpleScore = value;
+            if (value == minScore)
+                uiManager.ShowRestart(true);
         }
     }
 
@@ -47,11 +72,11 @@ public class TrackerScript : MonoBehaviour
     {
         if (whichScore == Score.BlueScore)
         {
-            BlueScoretxt.text = (--BlueScore).ToString();
+            blueScoretxt.text = (--BlueScore).ToString();
         }
         else
         {
-            PurpleScoretxt.text = (--PurpleScore).ToString();
+            purpleScoretxt.text = (--PurpleScore).ToString();
         }
     }
     
@@ -59,18 +84,18 @@ public class TrackerScript : MonoBehaviour
     {
         if (whichScore == Score.BlueScore)
         {
-            BlueScoretxt.text = (++BlueScore).ToString();
+            blueScoretxt.text = (++BlueScore).ToString();
         }
         else
         {
-            PurpleScoretxt.text = (++PurpleScore).ToString();
+            purpleScoretxt.text = (++PurpleScore).ToString();
         }
     }
 
     public void ResetScores()
     {
         BlueScore = PurpleScore = 26;
-        BlueScoretxt.text = PurpleScoretxt.text = "26";
+        blueScoretxt.text = purpleScoretxt.text = "26";
     }
 
 }

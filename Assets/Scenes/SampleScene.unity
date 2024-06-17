@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 90075369}
   - component: {fileID: 90075368}
   m_Layer: 5
-  m_Name: BlueBead_Tracker_Title
+  m_Name: TBlueBead_Tracker_Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -523,7 +523,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -548,7 +548,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -705,10 +705,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89940a5211a4ec5488d706904f20de0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlueScoretxt: {fileID: 1819466087}
-  PurpleScoretxt: {fileID: 1923058115}
-  MinScore: 0
+  blueScoretxt: {fileID: 1819466087}
+  purpleScoretxt: {fileID: 1923058115}
+  minScore: 0
   uiManager: {fileID: 719089046}
+  up: 0
+  down: 0
+  left: 0
+  right: 0
 --- !u!114 &719089046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,10 +725,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78c5592a141e67646b72bf74f2aac187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CanvaGame: {fileID: 951784457}
-  CanvaRestart: {fileID: 376418876}
-  BlueWinTxt: {fileID: 1973255624}
-  PurpleWinTxt: {fileID: 512279159}
+  canvaGame: {fileID: 951784457}
+  canvaRestart: {fileID: 376418876}
+  blueWinTxt: {fileID: 1973255624}
+  purpleWinTxt: {fileID: 512279159}
   trackerScript: {fileID: 0}
 --- !u!4 &719089047
 Transform:
@@ -741,6 +745,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &922092441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 922092442}
+  - component: {fileID: 922092443}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &922092442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922092441}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.289239, y: -1.7686653, z: 209.8832}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &922092443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922092441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0845edf7c5cd9854a9c4ee71b7d52f9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pi: 0
+  Bi: 0
 --- !u!1 &951784457
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,7 +974,7 @@ GameObject:
   - component: {fileID: 1277631767}
   - component: {fileID: 1277631766}
   m_Layer: 5
-  m_Name: PurpleBead_Tracker_Title
+  m_Name: TPurpleBead_Tracker_Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1246,7 +1296,7 @@ GameObject:
   - component: {fileID: 1819466086}
   - component: {fileID: 1819466087}
   m_Layer: 5
-  m_Name: BlueBead_Tracker
+  m_Name: TBlueBead_Tracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1325,7 +1375,7 @@ GameObject:
   - component: {fileID: 1923058116}
   - component: {fileID: 1923058115}
   m_Layer: 5
-  m_Name: PurpleBead_Tracker
+  m_Name: TPurpleBead_Tracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1561,3 +1611,4 @@ SceneRoots:
   - {fileID: 1474612928}
   - {fileID: 951784458}
   - {fileID: 719089047}
+  - {fileID: 922092442}

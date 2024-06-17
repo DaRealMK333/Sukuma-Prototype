@@ -1,36 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UIManager : MonoBehaviour
 {
-        [Header("Canvas")]
-        public GameObject CanvaGame;
-        public GameObject CanvaRestart;
+        [FormerlySerializedAs("CanvaGame")] [Header("Canvas")]
+        public GameObject canvaGame;
+        [FormerlySerializedAs("CanvaRestart")] public GameObject canvaRestart;
 
-        [Header("CanvasRestart")]
-        public GameObject BlueWinTxt;
-        public GameObject PurpleWinTxt;
+        [FormerlySerializedAs("BlueWinTxt")] [Header("CanvasRestart")]
+        public GameObject blueWinTxt;
+        [FormerlySerializedAs("PurpleWinTxt")] public GameObject purpleWinTxt;
 
         [Header("Other")]
         public TrackerScript trackerScript;
 
-        public void showRestart(bool BlueWin)
+        public void ShowRestart(bool blueWin)
         {
             Time.timeScale = 0;
 
-            CanvaGame.SetActive(false);
-            CanvaRestart.SetActive(true);
+            canvaGame.SetActive(false);
+            canvaRestart.SetActive(true);
 
-            if (BlueWin)
+            if (blueWin)
             {
-                BlueWinTxt.SetActive(true);
-                PurpleWinTxt.SetActive(false);
+                blueWinTxt.SetActive(true);
+                purpleWinTxt.SetActive(false);
             }
             else
             {
-                BlueWinTxt.SetActive(false);
-                PurpleWinTxt.SetActive(true);
+                blueWinTxt.SetActive(false);
+                purpleWinTxt.SetActive(true);
             }
         }
 
@@ -38,9 +39,14 @@ public class UIManager : MonoBehaviour
         {
             Time.timeScale = 1;
 
-            CanvaGame.SetActive(true);
-            CanvaRestart.SetActive(false);
+            canvaGame.SetActive(true);
+            canvaRestart.SetActive(false);
 
             trackerScript.ResetScores();
         }
+        
+      
     }
+
+
+    

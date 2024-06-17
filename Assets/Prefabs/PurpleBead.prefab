@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 2936388342688969391}
   - component: {fileID: -7212169947424758789}
   - component: {fileID: -8643848203643199514}
-  - component: {fileID: 6346400668927575015}
   - component: {fileID: -7930762339206468121}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PurpleBead
   m_TagString: PurpleBead
   m_Icon: {fileID: 0}
@@ -135,19 +134,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c4cacb96c793645afade9fe366aa99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MovementScript: {fileID: 0}
---- !u!114 &6346400668927575015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6989570932064997476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb42a559b9f6ff040a69a395c7c3cab0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  beadLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  rayDistance: 3
 --- !u!50 &-7930762339206468121
 Rigidbody2D:
   serializedVersion: 4

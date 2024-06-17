@@ -1,46 +1,50 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameObjectSpawnerScript : MonoBehaviour
 {
     public GameObject boardColliders;
-    public GameObject BlueBead;
-    public GameObject PurpleBead;
-    public GameObject[] ArrBlueBead = new GameObject[26];
-    public GameObject[] ArrPurpleBead = new GameObject[26];
-    public GameObject CircleHighlight;
+    [FormerlySerializedAs("BlueBead")] public GameObject blueBead;
+    [FormerlySerializedAs("PurpleBead")] public GameObject purpleBead;
+    [FormerlySerializedAs("ArrBlueBead")] public GameObject[] arrBlueBead = new GameObject[26];
+    [FormerlySerializedAs("ArrPurpleBead")] public GameObject[] arrPurpleBead = new GameObject[26];
+    [FormerlySerializedAs("CircleHighlight")] public GameObject circleHighlight;
 
-    public string[] ArrBlueBeadName = new string[26];
-    public string[] ArrPurpleBeadName = new string[26];
+    [FormerlySerializedAs("ArrBlueBeadName")] public string[] arrBlueBeadName = new string[26];
+    [FormerlySerializedAs("ArrPurpleBeadName")] public string[] arrPurpleBeadName = new string[26];
 
-    private bool[,] IsBeadPlaced = new bool[9, 9];
-    private bool IsPlayerBlueTurn = true;
-    private bool Ishovering;
+    private bool _isPlayerBlueTurn = true;
+    private bool _ishovering;
     
-    public GameObjectDestroyer Destroyer;
-    public TrackerScript _TrackerScript;
-    public bool DirectionBeadPlaced = false;
-   
+    [FormerlySerializedAs("Destroyer")] public GameObjectDestroyer destroyer;
+    [FormerlySerializedAs("_TrackerScript")] public TrackerScript trackerScript;
+
+    private DataManagerScript _dataManagerScript;
+    
+    public GameObjectSpawnerScript instance;
+    public bool threeRow = false;
     // Start is called before the first frame update
     void Start()
     {
-        _TrackerScript = FindObjectOfType<TrackerScript>();
+        trackerScript = FindObjectOfType<TrackerScript>();
+        _dataManagerScript = FindObjectOfType<DataManagerScript>();
         
-        for (int i = 0; i < ArrBlueBead.Length ; i++)
+        for (int i = 0; i < arrBlueBead.Length ; i++)
         {
-            ArrBlueBead[i] = BlueBead;
-            ArrPurpleBead[i] = PurpleBead;
+            arrBlueBead[i] = blueBead;
+            arrPurpleBead[i] = purpleBead;
             
         }
         
-        for (int i = 0; i < ArrBlueBead.Length ; i++)
+        for (int i = 0; i < arrBlueBead.Length ; i++)
         {
-            ArrBlueBeadName[i] = "BlueBead" + (i+1) ;
-            ArrPurpleBeadName[i] = "PurpleBead" + (i+1);
+            arrBlueBeadName[i] = "BlueBead" + (i+1) ;
+            arrPurpleBeadName[i] = "PurpleBead" + (i+1);
 
         }
         
-        Destroyer = FindObjectOfType<GameObjectDestroyer>();
+        destroyer = FindObjectOfType<GameObjectDestroyer>();
         for (int i = 0; i < 11; i++)
         {
             for (int j = 0; j < 11; j++)
@@ -58,11 +62,35 @@ public class GameObjectSpawnerScript : MonoBehaviour
     {
         BeadPlacer();
     }
+    
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void SpawnBead(GameObject beadPrefab, Vector3 position)
+    {
+        if (!threeRow)
+        {
+            Instantiate(beadPrefab, position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.Log("Cannot place bead due to three in a row restriction.");
+        }
+    }
 
     // ReSharper disable Unity.PerformanceAnalysis
     public void BeadPlacer()
     {
-        bool CanPlace;
+        bool canPlace;
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //stores this converted mouse position in a Vector2 variable named mousePosition
         RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
@@ -71,202 +99,245 @@ public class GameObjectSpawnerScript : MonoBehaviour
         if (hit.collider != null) // Check if the ray hits a collider
         {
            
-            ExtractCoordinates(hit.collider.name, out int Xcord, out int Ycord);
-            Debug.Log(hit.collider.name);
-         
-            Debug.Log("X: " +  Xcord);
-            Debug.Log("Y: " +  Ycord);
-            if (Xcord == -5 || Xcord == 5 || Ycord == -5 || Ycord == 5)
+            ExtractCoordinates(hit.collider.name, out int xcord, out int ycord);
+            
+            if (xcord == -5 || xcord == 5 || ycord == -5 || ycord == 5)
             {
-                CanPlace = true;
+                canPlace = true;
             }
             else
             {
-                CanPlace = false;
+                canPlace = false;
             }
             
+                            //Debug.Log(ycord);
+                if (_dataManagerScript.BlueDirection.Horizontal)
+                {
+                    if (_dataManagerScript.blueyCordList.Contains(ycord) && !_isPlayerBlueTurn)
+                    {
+                       // canPlace = false;
+                    }
+                }
+                 if (_dataManagerScript.BlueDirection.Vertical)
+                {
+                    if (_dataManagerScript.bluexCordList.Contains(xcord) && !_isPlayerBlueTurn)
+                    {
+                      // canPlace = false;
+                    }
+                }
+        
+                if ( _dataManagerScript.PurpleDirection.Horizontal ) 
+                {
+                    if (_dataManagerScript.purpleyCordList.Contains(ycord)  && _isPlayerBlueTurn)
+                    {
+                      // canPlace = false;
+                    }
+                }
+                
+                if (_dataManagerScript.PurpleDirection.Vertical)
+                {
+                    if (_dataManagerScript.purplexCordList.Contains(xcord)  && _isPlayerBlueTurn)
+                    {
+                      // canPlace = false;
+                    }
+                }
 
-            if (CanPlace)
+                if (_dataManagerScript.topLeftSpots.IsAllBlue || _dataManagerScript.topLeftSpots.IsAllPurple)
+                {
+                    if (xcord >= -5 && xcord <= 0 && ycord >= 0 && ycord <= 5)
+                    {
+                        canPlace = false;
+                    }
+                }
+                if (_dataManagerScript.topRightSpots.IsAllBlue || _dataManagerScript.topRightSpots.IsAllPurple)
+                {
+                    if (xcord >= 0 && xcord <= 5 && ycord >= 0 && ycord <= 5)
+                    {
+                        canPlace = false;
+                    }
+                }
+                if (_dataManagerScript.bottomLeftSpots.IsAllBlue || _dataManagerScript.bottomLeftSpots.IsAllPurple)
+                {
+                    if (xcord >= -5 && xcord <= 0 && ycord >= -5 && ycord <= 0)
+                    {
+                        canPlace = false;
+                    }
+                }
+                if (_dataManagerScript.bottomRightSpots.IsAllBlue || _dataManagerScript.bottomRightSpots.IsAllPurple)
+                {
+                    if (xcord >= 0 && xcord <= 5 && ycord >= -5 && ycord <= 0)
+                    {
+                        canPlace = false;
+                    }
+                }
+                
+
+            if (canPlace)
             {
                 if (!(Input.GetMouseButtonDown(0))) // Change this condition if you want to instantiate on hover instead of click
                 {
                     Vector3 position = new Vector3(hit.collider.bounds.center.x, hit.collider.bounds.center.y, -1); //stores the position where the beads will be placed
-                    if (IsPlayerBlueTurn && Ishovering == false)
+                    if (_isPlayerBlueTurn && _ishovering == false)
                     {
-                        BeadNamer(IsPlayerBlueTurn);
-                        Instantiate(ArrBlueBead[_TrackerScript.BlueScore - 1], position,
+                        BeadNamer(_isPlayerBlueTurn);
+                        Instantiate(arrBlueBead[trackerScript.BlueScore - 1], position,
                             Quaternion.identity); //creates blue beads if blues turn
-                        Instantiate(CircleHighlight,
+                        Instantiate(circleHighlight,
                             new Vector3(hit.collider.bounds.center.x, hit.collider.bounds.center.y, -2),
                             Quaternion.identity);
-                        Ishovering = true;
+                        _ishovering = true;
                     }
-                    else if (IsPlayerBlueTurn == false && Ishovering == false)
+                    else if (_isPlayerBlueTurn == false && _ishovering == false)
                     {
-                        BeadNamer(IsPlayerBlueTurn);
-                        Instantiate(ArrPurpleBead[_TrackerScript.PurpleScore - 1], position,
+                        BeadNamer(_isPlayerBlueTurn);
+                        Instantiate(arrPurpleBead[trackerScript.PurpleScore - 1], position,
                             Quaternion.identity); //creates purple beads if blues turn
-                        Instantiate(CircleHighlight,
+                        Instantiate(circleHighlight,
                             new Vector3(hit.collider.bounds.center.x, hit.collider.bounds.center.y, -2),
                             Quaternion.identity);
-                        Ishovering = true;
+                        _ishovering = true;
                     }
                 }
+
                 
+
                 if ((Input.GetMouseButtonDown(0))) // Change this condition if you want to instantiate on hover instead of click
                 {
                     Vector3 position =
                         new Vector3(hit.collider.bounds.center.x, hit.collider.bounds.center.y,
                             -1); //stores the position where the beads will be placed
            
-                    if (IsPlayerBlueTurn && Ishovering)
+                    if (_isPlayerBlueTurn && _ishovering)
                     {
                         GameObjectDestroyer.CircleHighlightDestroyer();
-                        BeadNamer(IsPlayerBlueTurn);
+                        BeadNamer(_isPlayerBlueTurn);
                         // Instantiate(ArrBlueBead[_TrackerScript.BlueScore-1], position, Quaternion.identity);//creates blue beads if blues turn
-                        _TrackerScript.Decrement(TrackerScript.Score.BlueScore);
+                        trackerScript.Decrement(TrackerScript.Score.BlueScore);
                 
                         Collider2D[] hitColliders = Physics2D.OverlapPointAll(position);
                 
-                        if (hitColliders != null && hitColliders.Length >= 3 && Xcord == -5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && xcord == -5 )
                         {
 
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.right; // Move 1 unit to the right
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.right;
-                            DirectionBeadPlaced = true;
+                            trackerScript.up = true;
                         }
-                        if (hitColliders != null && hitColliders.Length >= 3 && Ycord == -5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && ycord == -5 )
                         {
 
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.up; // Move 1 unit to the up
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.up;
-                            DirectionBeadPlaced = true; 
+                            trackerScript.down = true;
                         }
-                        if (hitColliders != null && hitColliders.Length >= 3 && Xcord == 5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && xcord == 5 )
                         {
 
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.left; // Move 1 unit to the left
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.left;
-                            DirectionBeadPlaced = true;
+                            trackerScript.left = true;
                         }
-                        if (hitColliders != null && hitColliders.Length >= 3 && Ycord == 5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && ycord == 5 )
                         {
 
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.down; // Move 1 unit to the down
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.down;
-                            DirectionBeadPlaced = true;
+                            trackerScript.right = true;
                         }
                 
-                        Ishovering = false;
-                        IsPlayerBlueTurn = false;
+                        _ishovering = false;
+                        _isPlayerBlueTurn = false;
                     }
-                    else if (IsPlayerBlueTurn == false && Ishovering)
+                    else if (_isPlayerBlueTurn == false && _ishovering)
                     {
                         GameObjectDestroyer.CircleHighlightDestroyer();
-                        BeadNamer(IsPlayerBlueTurn);
+                        BeadNamer(_isPlayerBlueTurn);
                         // Instantiate(ArrPurpleBead[_TrackerScript.PurpleScore-1], position, Quaternion.identity); //creates purple beads if blues turn
-                        _TrackerScript.Decrement(TrackerScript.Score.PurpleScore);
+                        trackerScript.Decrement(TrackerScript.Score.PurpleScore);
                 
                         Collider2D[] hitColliders = Physics2D.OverlapPointAll(position);
                 
-                        if (hitColliders != null && hitColliders.Length >= 3 && Xcord == -5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && xcord == -5 )
                         {
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.right; // Move 1 unit to the right
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.right;
-                            DirectionBeadPlaced = true;
+                            trackerScript.up = true;
                         }
-                        if (hitColliders != null && hitColliders.Length >= 3 && Ycord == -5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && ycord == -5 )
                         {
 
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.up; // Move 1 unit to the up
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.up;
-                            DirectionBeadPlaced = true;
+                            trackerScript.down = true;
                         }
-                        if (hitColliders != null && hitColliders.Length >= 3 && Xcord == 5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && xcord == 5 )
                         {
 
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.left; // Move 1 unit to the left
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.left;
-                            DirectionBeadPlaced = true;
+                            trackerScript.left = true;
                         }
-                        if (hitColliders != null && hitColliders.Length >= 3 && Ycord == 5 )
+                        if (hitColliders != null && hitColliders.Length >= 3 && ycord == 5 )
                         {
 
                             // Move the object underneath
                             Transform objectTransform = hitColliders[1].transform;
                             Vector3 newPosition = objectTransform.position + Vector3.down; // Move 1 unit to the down
                             objectTransform.position = newPosition;
-                            _TrackerScript.LastDirection = Vector3.down;
-                            DirectionBeadPlaced = true;
+                            trackerScript.right = true;
                         }
-                        Ishovering = false;
-                        IsPlayerBlueTurn = true;
+                        _ishovering = false;
+                        _isPlayerBlueTurn = true;
                     }
                 }
             }
         }
         
-        
-        
         if (hit.collider == null )
         {
-            if (Ishovering)
+            if (_ishovering)
             {
-                GameObjectDestroyer.BlueBeadDestroyer(_TrackerScript.BlueScore);
-                GameObjectDestroyer.PurpleBeadDestroyer(_TrackerScript.PurpleScore);
+                GameObjectDestroyer.BlueBeadDestroyer(trackerScript.BlueScore);
+                GameObjectDestroyer.PurpleBeadDestroyer(trackerScript.PurpleScore);
                 GameObjectDestroyer.CircleHighlightDestroyer();
-                Ishovering = false;
+                _ishovering = false;
             }
         }
     }
 
-    public int Ycord { get; set; }
-
-    public int Xcord { get; set; }
-
-    public void BeadNamer(bool IsplayerBlue)
+    private void BeadNamer(bool isplayerBlue)
     {
-        if (IsplayerBlue)
+        if (isplayerBlue)
         {
-            ArrBlueBead[_TrackerScript.BlueScore - 1].gameObject.name = ArrBlueBeadName[_TrackerScript.BlueScore - 1];
+            arrBlueBead[trackerScript.BlueScore - 1].gameObject.name = arrBlueBeadName[trackerScript.BlueScore - 1];
         }
         else
         {
-            ArrPurpleBead[_TrackerScript.PurpleScore - 1].gameObject.name = ArrPurpleBeadName[_TrackerScript.PurpleScore - 1];
+            arrPurpleBead[trackerScript.PurpleScore - 1].gameObject.name = arrPurpleBeadName[trackerScript.PurpleScore - 1];
         }
     }
 
 
-
-    static void ExtractCoordinates(string input, out int x, out int y)
+    private static void ExtractCoordinates(string input, out int x, out int y)
     {
-        
-
         // Split the string by space and comma
         string[] parts = input.Split(' ', ',');
 
-        // Initialize variables
+        // Initialize variables out of range
         x = 6;
         y = 6;
 
@@ -284,4 +355,8 @@ public class GameObjectSpawnerScript : MonoBehaviour
     }
     
     
+}
+
+public class GameObjectSpawner
+{
 }

@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 1932348250331692072}
   - component: {fileID: 5681069336267097631}
   - component: {fileID: 6350840077144790227}
-  - component: {fileID: 3451632399147303745}
   - component: {fileID: 829681606738910985}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BlueBead
   m_TagString: BlueBead
   m_Icon: {fileID: 0}
@@ -148,19 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c4cacb96c793645afade9fe366aa99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MovementScript: {fileID: 0}
---- !u!114 &3451632399147303745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2908449363776007015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb42a559b9f6ff040a69a395c7c3cab0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  beadLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  rayDistance: 3
 --- !u!50 &829681606738910985
 Rigidbody2D:
   serializedVersion: 4
